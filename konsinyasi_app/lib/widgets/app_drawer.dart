@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../themes/app_theme.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class AppDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: AppTheme.primaryColor,
+              color: Colors.green,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +61,7 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.inventory),
-            title: const Text('Stok Barang'),
+            title: const Text('Inventory'),
             onTap: () {
               Get.back();
               Get.toNamed('/inventory');
@@ -70,7 +69,7 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.shopping_cart),
-            title: const Text('Data Pembelian'),
+            title: const Text('Purchase'),
             onTap: () {
               Get.back();
               Get.toNamed('/purchase');
@@ -79,7 +78,7 @@ class AppDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text('Pengaturan'),
+            title: const Text('Settings'),
             onTap: () {
               Get.back();
               Get.toNamed('/settings');
@@ -87,10 +86,10 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Keluar'),
+            title: const Text('Logout'),
             onTap: () {
               Get.back();
-              // Implement logout logic
+              Get.offAllNamed('/login');
             },
           ),
         ],

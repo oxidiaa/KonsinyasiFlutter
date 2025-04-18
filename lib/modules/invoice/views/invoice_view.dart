@@ -148,7 +148,7 @@ class InvoiceView extends GetView<InvoiceController> {
                     Container(
                       width: 24,
                       height: 24,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: AppTheme.primaryColor,
                         shape: BoxShape.circle,
                       ),

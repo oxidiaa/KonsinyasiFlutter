@@ -205,7 +205,7 @@ class PrintInvoiceView extends GetView<PrintInvoiceController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Preview',
                     style: TextStyle(
                       fontSize: 16,
