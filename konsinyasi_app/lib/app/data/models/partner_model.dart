@@ -13,16 +13,6 @@ class PartnerModel {
     this.email,
   });
 
-  factory PartnerModel.fromJson(Map<String, dynamic> json) {
-    return PartnerModel(
-      id: json['id'],
-      name: json['name'],
-      address: json['address'],
-      phone: json['phone'],
-      email: json['email'],
-    );
-  }
-
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -31,5 +21,15 @@ class PartnerModel {
       'phone': phone,
       'email': email,
     };
+  }
+
+  factory PartnerModel.fromJson(Map<String, dynamic> json) {
+    return PartnerModel(
+      id: json['id'],
+      name: json['name'],
+      address: json['address'],
+      phone: json['phone'],
+      email: json['email'],
+    );
   }
 }

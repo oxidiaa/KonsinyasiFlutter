@@ -9,10 +9,14 @@ import '../../modules/sales_partner/views/sales_partner_view.dart';
 import '../../modules/invoice/views/invoice_view.dart';
 import '../../modules/print_invoice/views/print_invoice_view.dart';
 import '../../modules/login/views/login_view.dart';
+import '../../modules/profile/bindings/profile_binding.dart';
+import '../../modules/profile/views/profile_view.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
+  AppPages._();
+
   static const INITIAL = Routes.LOGIN;
 
   static final routes = [
@@ -40,6 +44,11 @@ class AppPages {
       name: Routes.PRINT_INVOICE,
       page: () => const PrintInvoiceView(),
       binding: PrintInvoiceBinding(),
+    ),
+    GetPage(
+      name: Routes.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }

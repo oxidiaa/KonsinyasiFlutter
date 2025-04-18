@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../app/routes/app_pages.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -7,89 +8,92 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Colors.green,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
+            child: Row(
               children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  backgroundImage:
-                      NetworkImage('https://via.placeholder.com/150'),
-                ),
-                const SizedBox(height: 10),
                 const Text(
-                  'Ayu Herbal',
+                  'Beranda',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  'Distributor Herbal Kesehatan',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 12,
-                  ),
+                const Spacer(),
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.green[100],
+                  child: const Icon(Icons.person, color: Colors.green),
                 ),
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Home'),
-            onTap: () {
-              Get.back();
-              Get.offAllNamed('/home');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.store),
-            title: const Text('Penjualan & Mitra'),
-            onTap: () {
-              Get.back();
-              Get.toNamed('/sales-partner');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.inventory),
-            title: const Text('Inventory'),
-            onTap: () {
-              Get.back();
-              Get.toNamed('/inventory');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.shopping_cart),
-            title: const Text('Purchase'),
-            onTap: () {
-              Get.back();
-              Get.toNamed('/purchase');
-            },
-          ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
+            leading: const Icon(
+              Icons.people,
+              color: Colors.green,
+            ),
+            title: const Text(
+              'Penjualan & Mitra',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            onTap: () => Get.toNamed(Routes.SALES_PARTNER),
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.shopping_cart,
+              color: Colors.green,
+            ),
+            title: const Text(
+              'Pembelian & Suplier',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             onTap: () {
+              // TODO: Navigate to Pembelian & Suplier
               Get.back();
-              Get.toNamed('/settings');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
+            leading: const Icon(
+              Icons.notifications,
+              color: Colors.green,
+            ),
+            title: const Text(
+              'Notifikasi & Reminder',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             onTap: () {
+              // TODO: Navigate to Notifikasi & Reminder
               Get.back();
-              Get.offAllNamed('/login');
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.settings,
+              color: Colors.green,
+            ),
+            title: const Text(
+              'Pengaturan',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            onTap: () {
+              // TODO: Navigate to Pengaturan
+              Get.back();
             },
           ),
         ],

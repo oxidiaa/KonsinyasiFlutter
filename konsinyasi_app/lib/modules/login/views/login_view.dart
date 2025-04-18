@@ -8,6 +8,7 @@ class LoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
+    print('🟢 LOGIN VIEW');
     return Scaffold(
       body: SafeArea(
         child: Padding(

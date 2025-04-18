@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/controllers/sales_partner_controller.dart';
+import '../../../app/data/models/partner_model.dart';
 
 class SalesPartnerView extends GetView<SalesPartnerController> {
   const SalesPartnerView({Key? key}) : super(key: key);
@@ -50,11 +51,17 @@ class SalesPartnerView extends GetView<SalesPartnerController> {
                       leading: CircleAvatar(
                         backgroundColor: Colors.green,
                         child: Text(
-                          partner.id,
+                          (index + 1).toString(),
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
-                      title: Text(partner.name),
+                      title: Text(
+                        partner.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(partner.address ?? ''),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -67,12 +74,12 @@ class SalesPartnerView extends GetView<SalesPartnerController> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () => controller.editPartner(partner),
+                            onPressed: () => _showEditDialog(context, partner),
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () =>
-                                controller.deletePartner(partner.id),
+                                _showDeleteConfirmation(context, partner),
                           ),
                         ],
                       ),
@@ -85,11 +92,143 @@ class SalesPartnerView extends GetView<SalesPartnerController> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Handle tambah mitra
-        },
+        onPressed: () => _showAddDialog(context),
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _showEditDialog(BuildContext context, PartnerModel partner) {
+    final nameController = TextEditingController(text: partner.name);
+    final addressController = TextEditingController(text: partner.address);
+    final phoneController = TextEditingController(text: partner.phone);
+    final emailController = TextEditingController(text: partner.email);
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Edit Mitra'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Nama'),
+              ),
+              TextField(
+                controller: addressController,
+                decoration: const InputDecoration(labelText: 'Alamat'),
+              ),
+              TextField(
+                controller: phoneController,
+                decoration: const InputDecoration(labelText: 'Telepon'),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final updatedPartner = PartnerModel(
+                id: partner.id,
+                name: nameController.text,
+                address: addressController.text,
+                phone: phoneController.text,
+                email: emailController.text,
+              );
+              controller.updatePartner(updatedPartner);
+            },
+            child: const Text('Simpan'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, PartnerModel partner) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Hapus Mitra'),
+        content: Text('Apakah Anda yakin ingin menghapus ${partner.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              controller.deletePartner(partner.id);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddDialog(BuildContext context) {
+    final nameController = TextEditingController();
+    final addressController = TextEditingController();
+    final phoneController = TextEditingController();
+    final emailController = TextEditingController();
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Tambah Mitra'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Nama'),
+              ),
+              TextField(
+                controller: addressController,
+                decoration: const InputDecoration(labelText: 'Alamat'),
+              ),
+              TextField(
+                controller: phoneController,
+                decoration: const InputDecoration(labelText: 'Telepon'),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newPartner = PartnerModel(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: nameController.text,
+                address: addressController.text,
+                phone: phoneController.text,
+                email: emailController.text,
+              );
+              controller.createPartner(newPartner);
+            },
+            child: const Text('Simpan'),
+          ),
+        ],
       ),
     );
   }
