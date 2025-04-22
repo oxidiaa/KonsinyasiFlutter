@@ -8,92 +8,86 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
+      child: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
-            child: Row(
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Colors.green,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Beranda',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Image.asset(
+                  'assets/images/login.png',
+                  height: 80,
                 ),
-                const Spacer(),
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.green[100],
-                  child: const Icon(Icons.person, color: Colors.green),
+                const SizedBox(height: 10),
+                const Text(
+                  'Konsinyasi App',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
                 ),
               ],
             ),
           ),
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text('Home'),
+            onTap: () {
+              Get.back();
+              Get.toNamed(Routes.HOME);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.people),
+            title: const Text('Sales & Partners'),
+            onTap: () {
+              Get.back();
+              Get.toNamed(Routes.SALES_PARTNER);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.shopping_cart),
+            title: const Text('Pembelian & Supplier'),
+            onTap: () {
+              Get.back();
+              Get.toNamed(Routes.SUPPLIER);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.inventory),
+            title: const Text('Inventory'),
+            onTap: () {
+              Get.back();
+              Get.snackbar(
+                'Info',
+                'Inventory feature coming soon',
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+              Get.back();
+              Get.snackbar(
+                'Info',
+                'Settings feature coming soon',
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            },
+          ),
           const Divider(),
           ListTile(
-            leading: const Icon(
-              Icons.people,
-              color: Colors.green,
-            ),
-            title: const Text(
-              'Penjualan & Mitra',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            onTap: () => Get.toNamed(Routes.SALES_PARTNER),
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.shopping_cart,
-              color: Colors.green,
-            ),
-            title: const Text(
-              'Pembelian & Suplier',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
             onTap: () {
-              // TODO: Navigate to Pembelian & Suplier
               Get.back();
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.notifications,
-              color: Colors.green,
-            ),
-            title: const Text(
-              'Notifikasi & Reminder',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            onTap: () {
-              // TODO: Navigate to Notifikasi & Reminder
-              Get.back();
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.settings,
-              color: Colors.green,
-            ),
-            title: const Text(
-              'Pengaturan',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            onTap: () {
-              // TODO: Navigate to Pengaturan
-              Get.back();
+              Get.offAllNamed(Routes.LOGIN);
             },
           ),
         ],
