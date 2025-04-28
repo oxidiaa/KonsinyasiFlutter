@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../themes/app_theme.dart';
+import '../app/routes/app_pages.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -13,32 +13,21 @@ class AppDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: AppTheme.primaryColor,
+              color: Colors.green,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  backgroundImage:
-                      NetworkImage('https://via.placeholder.com/150'),
+                Image.asset(
+                  'assets/images/login.png',
+                  height: 80,
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Ayu Herbal',
+                  'Konsinyasi App',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Distributor Herbal Kesehatan',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 12,
+                    fontSize: 24,
                   ),
                 ),
               ],
@@ -49,48 +38,56 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Home'),
             onTap: () {
               Get.back();
-              Get.offAllNamed('/home');
+              Get.toNamed(Routes.HOME);
             },
           ),
           ListTile(
-            leading: const Icon(Icons.store),
-            title: const Text('Penjualan & Mitra'),
+            leading: const Icon(Icons.people),
+            title: const Text('Sales & Partners'),
             onTap: () {
               Get.back();
-              Get.toNamed('/sales-partner');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.inventory),
-            title: const Text('Stok Barang'),
-            onTap: () {
-              Get.back();
-              Get.toNamed('/inventory');
+              Get.toNamed(Routes.SALES_PARTNER);
             },
           ),
           ListTile(
             leading: const Icon(Icons.shopping_cart),
-            title: const Text('Data Pembelian'),
+            title: const Text('Pembelian & Supplier'),
             onTap: () {
               Get.back();
-              Get.toNamed('/purchase');
+              Get.toNamed(Routes.SUPPLIER);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.inventory),
+            title: const Text('Inventory'),
+            onTap: () {
+              Get.back();
+              Get.snackbar(
+                'Info',
+                'Inventory feature coming soon',
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+              Get.back();
+              Get.snackbar(
+                'Info',
+                'Settings feature coming soon',
+                snackPosition: SnackPosition.BOTTOM,
+              );
             },
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Pengaturan'),
-            onTap: () {
-              Get.back();
-              Get.toNamed('/settings');
-            },
-          ),
-          ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Keluar'),
+            title: const Text('Logout'),
             onTap: () {
               Get.back();
-              // Implement logout logic
+              Get.offAllNamed(Routes.LOGIN);
             },
           ),
         ],

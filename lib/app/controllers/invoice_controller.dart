@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
+import '../data/models/invoice_model.dart';
 import '../data/models/product_model.dart';
-import '../data/providers/api_provider.dart';
 
 class InvoiceController extends GetxController {
-  final ApiProvider apiProvider = Get.find<ApiProvider>();
-  final RxList<ProductModel> products = <ProductModel>[].obs;
+  final RxList<InvoiceModel> invoices = <InvoiceModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxString selectedMonth = ''.obs;
   final RxString partnerName = ''.obs;
@@ -16,34 +15,66 @@ class InvoiceController extends GetxController {
     final args = Get.arguments as Map<String, dynamic>;
     partnerName.value = args['partnerName'];
     partnerId.value = args['partnerId'];
-    loadProducts();
+    loadDummyInvoices();
   }
 
-  Future<void> loadProducts() async {
-    try {
-      isLoading.value = true;
-      final result = await apiProvider.getProducts();
-      products.value = result;
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load products',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } finally {
-      isLoading.value = false;
-    }
+  void loadDummyInvoices() {
+    invoices.value = [
+      InvoiceModel(
+        id: '1',
+        partnerId: '1',
+        date: DateTime.now(),
+        products: [
+          ProductModel(
+            id: '1',
+            name: 'Product A',
+            initialQuantity: 10,
+            newQuantity: 5,
+            totalStock: 15,
+            price: 100000,
+          ),
+          ProductModel(
+            id: '2',
+            name: 'Product B',
+            initialQuantity: 20,
+            newQuantity: 8,
+            totalStock: 28,
+            price: 150000,
+          ),
+        ],
+      ),
+      InvoiceModel(
+        id: '2',
+        partnerId: '1',
+        date: DateTime.now().subtract(const Duration(days: 30)),
+        products: [
+          ProductModel(
+            id: '3',
+            name: 'Product C',
+            initialQuantity: 15,
+            newQuantity: 7,
+            totalStock: 22,
+            price: 75000,
+          ),
+        ],
+      ),
+    ];
   }
 
-  void selectMonth(String month) {
+  void filterByMonth(String month) {
     selectedMonth.value = month;
-    // Implement month selection logic
+    // Implementasi filter berdasarkan bulan bisa ditambahkan di sini
+  }
+
+  void printInvoice(String invoiceId) {
+    // Implementasi print invoice bisa ditambahkan di sini
+    Get.toNamed('/print-invoice', arguments: {'invoiceId': invoiceId});
   }
 
   void navigateToPrintInvoice() {
     Get.toNamed('/print-invoice', arguments: {
       'partnerName': partnerName.value,
-      'products': products,
+      'products': invoices.value.first.products,
     });
   }
 }

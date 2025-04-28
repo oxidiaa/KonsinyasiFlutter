@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../themes/app_theme.dart';
 import '../../../app/controllers/print_invoice_controller.dart';
 
 class PrintInvoiceView extends GetView<PrintInvoiceController> {
@@ -10,288 +9,216 @@ class PrintInvoiceView extends GetView<PrintInvoiceController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Print Invoice'),
         backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         elevation: 0,
-        title: const Text(
-          'Print Faktur',
-          style: TextStyle(color: Colors.black),
-        ),
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Size',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Obx(() => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(controller.printerSize.value),
-                              )),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Destination',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Obx(() => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(controller.destination.value),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Pages',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Obx(() => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(controller.pages.value),
-                              )),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Copies',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Obx(() => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(controller.copies.value.toString()),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Layout',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Obx(() => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(controller.layout.value),
-                              )),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Color',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Obx(() => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(controller.color.value),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const Divider(),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Preview',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Obx(() => Text(
-                              controller.partnerName.value,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Konsinyasi: ${DateTime.now().day} Februari 2024',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Obx(() => DataTable(
-                                columns: const [
-                                  DataColumn(label: Text('No')),
-                                  DataColumn(label: Text('Nama Product')),
-                                  DataColumn(label: Text('K.Awal')),
-                                  DataColumn(label: Text('K.Baru')),
-                                  DataColumn(label: Text('T.Stok')),
-                                ],
-                                rows: controller.products.map((product) {
-                                  return DataRow(
-                                    cells: [
-                                      DataCell(Text(product.id.toString())),
-                                      DataCell(Text(product.name)),
-                                      DataCell(Text(product.stock.toString())),
-                                      DataCell(
-                                        product.sold > 0
-                                            ? Text(product.sold.toString())
-                                            : const Text('-'),
-                                      ),
-                                      DataCell(Text(product.stock.toString())),
-                                    ],
-                                  );
-                                }).toList(),
-                              )),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Printer Settings',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            const SizedBox(height: 16),
+            _buildSettingRow(
+              'Size',
+              Obx(() => DropdownButton<String>(
+                    value: controller.printerSize.value,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'EPSON TM-T82',
+                        child: Text('EPSON TM-T82'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.setPrinterSize(value);
+                      }
+                    },
+                  )),
+            ),
+            _buildSettingRow(
+              'Destination',
+              Obx(() => DropdownButton<String>(
+                    value: controller.destination.value,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'Local Printer',
+                        child: Text('Local Printer'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.setDestination(value);
+                      }
+                    },
+                  )),
+            ),
+            _buildSettingRow(
+              'Pages',
+              Obx(() => DropdownButton<String>(
+                    value: controller.pages.value,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'All',
+                        child: Text('All'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.setPages(value);
+                      }
+                    },
+                  )),
+            ),
+            _buildSettingRow(
+              'Copies',
+              Obx(() => DropdownButton<int>(
+                    value: controller.copies.value,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 1,
+                        child: Text('1'),
+                      ),
+                      DropdownMenuItem(
+                        value: 2,
+                        child: Text('2'),
+                      ),
+                      DropdownMenuItem(
+                        value: 3,
+                        child: Text('3'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.setCopies(value);
+                      }
+                    },
+                  )),
+            ),
+            _buildSettingRow(
+              'Layout',
+              Obx(() => DropdownButton<String>(
+                    value: controller.layout.value,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'Portrait',
+                        child: Text('Portrait'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Landscape',
+                        child: Text('Landscape'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.setLayout(value);
+                      }
+                    },
+                  )),
+            ),
+            _buildSettingRow(
+              'Color',
+              Obx(() => DropdownButton<String>(
+                    value: controller.color.value,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'Color',
+                        child: Text('Color'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Black & White',
+                        child: Text('Black & White'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.setColor(value);
+                      }
+                    },
+                  )),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'Preview',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    'Invoice Preview for ${controller.partnerName.value}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextButton(
-                  onPressed: controller.cancel,
+                ElevatedButton(
+                  onPressed: () => Get.back(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
                   child: const Text('Cancel'),
                 ),
-                const SizedBox(width: 16),
                 ElevatedButton(
                   onPressed: controller.printInvoice,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
                   ),
                   child: const Text('Print'),
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingRow(String label, Widget dropdown) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 16),
+          ),
+          SizedBox(
+            width: 200,
+            child: dropdown,
           ),
         ],
       ),
