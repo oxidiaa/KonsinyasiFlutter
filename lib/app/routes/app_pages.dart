@@ -11,8 +11,6 @@ import '../../modules/print_invoice/views/print_invoice_view.dart';
 import '../../modules/login/views/login_view.dart';
 import '../../modules/profile/bindings/profile_binding.dart';
 import '../../modules/profile/views/profile_view.dart';
-import '../../modules/supplier/bindings/supplier_binding.dart';
-import '../../modules/supplier/views/supplier_view.dart';
 
 part 'app_routes.dart';
 
@@ -51,11 +49,6 @@ class AppPages {
       name: Routes.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
-    ),
-    GetPage(
-      name: Routes.SUPPLIER,
-      page: () => const SupplierView(),
-      binding: SupplierBinding(),
     ),
   ];
 }
