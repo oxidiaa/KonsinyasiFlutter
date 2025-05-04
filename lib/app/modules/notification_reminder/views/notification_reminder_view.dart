@@ -43,13 +43,17 @@ class NotificationReminderView extends GetView<NotificationReminderController> {
           _buildListTile(
             icon: Icons.description,
             title: 'List Tagihan Penjualan',
-            onTap: controller.onPenjualanTap,
+            onTap: () {
+              Get.toNamed('/billing'); // Add route navigation
+            },
           ),
           const Divider(height: 1, indent: 20, endIndent: 20),
           _buildListTile(
             icon: Icons.description,
             title: 'List Tagihan Pembelian',
-            onTap: controller.onPembelianTap,
+            onTap: () {
+              Get.toNamed('/bill-pembelian'); // Add route navigation
+            },
           ),
         ],
       ),

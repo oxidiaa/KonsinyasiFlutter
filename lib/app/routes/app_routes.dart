@@ -10,4 +10,6 @@ abstract class Routes {
   static const PROFILE = '/profile';
   static const SUPPLIER = '/supplier';
   static const NOTIFICATION_REMINDER = '/notification-reminder';
+  static const BILLING = '/billing';
+  static const BILL_PEMBELIAN = '/bill-pembelian';
 }
