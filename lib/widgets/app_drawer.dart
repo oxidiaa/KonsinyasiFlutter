@@ -58,8 +58,8 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // TODO: Navigate to Pembelian & Suplier
               Get.back();
+              Get.toNamed(Routes.SUPPLIER);
             },
           ),
           ListTile(

@@ -9,7 +9,17 @@ class SupplierView extends GetView<SupplierController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pembelian & Supliyer'),
+        title: const Text(
+          'Pembelian & Supliyer',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
@@ -21,58 +31,26 @@ class SupplierView extends GetView<SupplierController> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
-              controller: controller.searchController,
+              onChanged: controller.searchSuppliers,
               decoration: InputDecoration(
                 hintText: 'Cari',
                 prefixIcon: const Icon(Icons.search, color: Colors.green),
-                filled: true,
-                fillColor: Colors.green.withOpacity(0.1),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                filled: true,
+                fillColor: Colors.green[50],
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
               ),
             ),
           ),
-
-          // Table Header
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                const SizedBox(width: 50, child: Text('No')),
-                const Expanded(
-                  flex: 2,
-                  child: Text('List Supliyer',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-                const Expanded(
-                  child: Text('Product',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
-                      Text('Action',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const Divider(height: 1),
-
-          // Table Content
+          // Supplier List
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
-
               return ListView.builder(
                 itemCount: controller.suppliers.length,
                 itemBuilder: (context, index) {
@@ -103,29 +81,20 @@ class SupplierView extends GetView<SupplierController> {
                             child: IconButton(
                               icon: const Icon(Icons.description,
                                   color: Colors.green),
-                              onPressed: () =>
-                                  controller.viewProducts(supplier['id']),
+                              onPressed: () => controller.showProductList(
+                                  supplier['id'], supplier['name']),
                             ),
                           ),
                           // Action Buttons
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Colors.blue),
-                                  onPressed: () =>
-                                      controller.editSupplier(supplier['id']),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: () =>
-                                      controller.deleteSupplier(supplier['id']),
-                                ),
-                              ],
-                            ),
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.green),
+                            onPressed: () =>
+                                controller.editSupplier(supplier['id']),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.green),
+                            onPressed: () =>
+                                controller.deleteSupplier(supplier['id']),
                           ),
                         ],
                       ),

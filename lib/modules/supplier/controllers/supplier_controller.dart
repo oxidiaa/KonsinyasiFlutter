@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../app/data/models/product_model.dart';
 
 class SupplierController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxList<Map<String, dynamic>> suppliers = <Map<String, dynamic>>[].obs;
+  final RxMap<String, List<ProductModel>> supplierProducts =
+      <String, List<ProductModel>>{}.obs;
   final TextEditingController searchController = TextEditingController();
   final RxString searchQuery = ''.obs;
 
@@ -147,6 +150,113 @@ class SupplierController extends GetxController {
         ],
       ),
     );
+  }
+
+  void searchSuppliers(String query) {
+    if (query.isEmpty) {
+      loadSuppliers();
+      return;
+    }
+    final filtered = suppliers
+        .where((supplier) => supplier['name']
+            .toString()
+            .toLowerCase()
+            .contains(query.toLowerCase()))
+        .toList();
+    suppliers.value = filtered;
+  }
+
+  void showProductList(String supplierId, String supplierName) {
+    Get.dialog(
+      Dialog(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                supplierName,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (supplierProducts[supplierId] != null)
+                DataTable(
+                  columns: const [
+                    DataColumn(label: Text('No')),
+                    DataColumn(label: Text('List Product')),
+                    DataColumn(label: Text('Harga')),
+                    DataColumn(label: Text('Action')),
+                  ],
+                  rows: supplierProducts[supplierId]!
+                      .asMap()
+                      .entries
+                      .map((entry) {
+                    final product = entry.value;
+                    return DataRow(
+                      cells: [
+                        DataCell(Text('${entry.key + 1}')),
+                        DataCell(Text(product.name)),
+                        DataCell(Text('Rp ${product.price.toInt()}')),
+                        DataCell(
+                          Row(
+                            children: [
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.green),
+                                onPressed: () =>
+                                    editProduct(supplierId, product.id),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete,
+                                    color: Colors.green),
+                                onPressed: () =>
+                                    deleteProduct(supplierId, product.id),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: const Text('Tutup'),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () => addProduct(supplierId),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: const Text('Tambah Product'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void addProduct(String supplierId) {
+    // TODO: Implement add product
+  }
+
+  void editProduct(String supplierId, String productId) {
+    // TODO: Implement edit product
+  }
+
+  void deleteProduct(String supplierId, String productId) {
+    // TODO: Implement delete product
   }
 
   @override

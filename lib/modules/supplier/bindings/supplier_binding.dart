@@ -4,8 +4,6 @@ import '../controllers/supplier_controller.dart';
 class SupplierBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SupplierController>(
-      () => SupplierController(),
-    );
+    Get.lazyPut<SupplierController>(() => SupplierController());
   }
 }
