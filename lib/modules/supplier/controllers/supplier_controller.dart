@@ -330,15 +330,181 @@ class SupplierController extends GetxController {
   }
 
   void addProduct(String supplierId) {
-    // TODO: Implement add product
+    final nameController = TextEditingController();
+    final priceController = TextEditingController();
+    final initialQtyController = TextEditingController();
+    final newQtyController = TextEditingController();
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Tambah Produk'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Nama Produk'),
+              ),
+              TextField(
+                controller: priceController,
+                decoration: const InputDecoration(labelText: 'Harga'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: initialQtyController,
+                decoration: const InputDecoration(labelText: 'Stok Awal'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: newQtyController,
+                decoration: const InputDecoration(labelText: 'Stok Baru'),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final name = nameController.text.trim();
+              final price = double.tryParse(priceController.text) ?? 0;
+              final initialQty = int.tryParse(initialQtyController.text) ?? 0;
+              final newQty = int.tryParse(newQtyController.text) ?? 0;
+              if (name.isEmpty || price == 0) return;
+              final newProduct = ProductModel(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: name,
+                price: price,
+                initialQuantity: initialQty,
+                newQuantity: newQty,
+                totalStock: initialQty + newQty,
+              );
+              supplierProducts[supplierId] = [
+                ...?supplierProducts[supplierId],
+                newProduct,
+              ];
+              Get.back();
+              // Refresh dialog
+              showProductList(supplierId,
+                  suppliers.firstWhere((s) => s['id'] == supplierId)['name']);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Simpan'),
+          ),
+        ],
+      ),
+    );
   }
 
   void editProduct(String supplierId, String productId) {
-    // TODO: Implement edit product
+    final product =
+        supplierProducts[supplierId]?.firstWhere((p) => p.id == productId);
+    if (product == null) return;
+    final nameController = TextEditingController(text: product.name);
+    final priceController =
+        TextEditingController(text: product.price.toStringAsFixed(0));
+    final initialQtyController =
+        TextEditingController(text: product.initialQuantity.toString());
+    final newQtyController =
+        TextEditingController(text: product.newQuantity.toString());
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Edit Produk'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Nama Produk'),
+              ),
+              TextField(
+                controller: priceController,
+                decoration: const InputDecoration(labelText: 'Harga'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: initialQtyController,
+                decoration: const InputDecoration(labelText: 'Stok Awal'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: newQtyController,
+                decoration: const InputDecoration(labelText: 'Stok Baru'),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final name = nameController.text.trim();
+              final price = double.tryParse(priceController.text) ?? 0;
+              final initialQty = int.tryParse(initialQtyController.text) ?? 0;
+              final newQty = int.tryParse(newQtyController.text) ?? 0;
+              if (name.isEmpty || price == 0) return;
+              final idx = supplierProducts[supplierId]
+                      ?.indexWhere((p) => p.id == productId) ??
+                  -1;
+              if (idx != -1) {
+                supplierProducts[supplierId]![idx] = ProductModel(
+                  id: productId,
+                  name: name,
+                  price: price,
+                  initialQuantity: initialQty,
+                  newQuantity: newQty,
+                  totalStock: initialQty + newQty,
+                );
+              }
+              Get.back();
+              // Refresh dialog
+              showProductList(supplierId,
+                  suppliers.firstWhere((s) => s['id'] == supplierId)['name']);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Simpan'),
+          ),
+        ],
+      ),
+    );
   }
 
   void deleteProduct(String supplierId, String productId) {
-    // TODO: Implement delete product
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Hapus Produk'),
+        content: const Text('Yakin ingin menghapus produk ini?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              supplierProducts[supplierId]
+                  ?.removeWhere((p) => p.id == productId);
+              Get.back();
+              // Refresh dialog
+              showProductList(supplierId,
+                  suppliers.firstWhere((s) => s['id'] == supplierId)['name']);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
