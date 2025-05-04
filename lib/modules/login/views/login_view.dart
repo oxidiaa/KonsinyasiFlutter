@@ -25,14 +25,19 @@ class LoginView extends GetView<LoginController> {
                     const SizedBox(height: 20),
 
                     // Logo image from Figma
-                    Container(
-                      width: 247,
-                      height: 239,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/logo.png'), // Perbaikan path
-                          fit: BoxFit.fitWidth,
+                    FittedBox(
+                      fit: BoxFit.contain,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width *
+                            0.4, // 40% of screen width
+                        height: MediaQuery.of(context).size.height *
+                            0.2, // 20% of screen height
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'assets/images/login.png'), // Pastikan path benar
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                     ),
