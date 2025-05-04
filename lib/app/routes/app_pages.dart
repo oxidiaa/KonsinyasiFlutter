@@ -15,6 +15,9 @@ import '../modules/supplier/views/supplier_view.dart';
 import '../modules/supplier/bindings/supplier_binding.dart';
 import '../modules/notification_reminder/views/notification_reminder_view.dart';
 import '../modules/notification_reminder/bindings/notification_reminder_binding.dart';
+import '../modules/profile/views/personal_details_view.dart';
+import '../modules/profile/views/account_privacy_view.dart';
+import '../modules/profile/views/notifications_view.dart';
 import '../../splash_screen.dart';
 
 part 'app_routes.dart';
@@ -68,6 +71,18 @@ class AppPages {
       name: Routes.NOTIFICATION_REMINDER,
       page: () => const NotificationReminderView(),
       binding: NotificationReminderBinding(),
+    ),
+    GetPage(
+      name: '/personal-details',
+      page: () => const PersonalDetailsView(),
+    ),
+    GetPage(
+      name: '/account-privacy',
+      page: () => const AccountPrivacyView(),
+    ),
+    GetPage(
+      name: '/notifications',
+      page: () => const NotificationsView(),
     ),
   ];
 }
