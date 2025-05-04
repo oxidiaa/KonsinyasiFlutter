@@ -219,17 +219,144 @@ class SupplierController extends GetxController {
     );
   }
 
-  void editSupplier(int supplierId) {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Edit Supplier'),
-        content: const Text('Edit supplier feature coming soon'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Close'),
+  void editSupplier(String supplierId) {
+    final idx = suppliers.indexWhere((s) => s['id'] == supplierId);
+    if (idx == -1) return;
+    final supplier = suppliers[idx];
+    final kodeController = TextEditingController(text: supplier['kode'] ?? '');
+    final namaController = TextEditingController(text: supplier['name'] ?? '');
+    final alamatController =
+        TextEditingController(text: supplier['address'] ?? '');
+    final telpController = TextEditingController(text: supplier['phone'] ?? '');
+    final jenisController =
+        TextEditingController(text: supplier['jenis'] ?? '');
+    final catatanController =
+        TextEditingController(text: supplier['catatan'] ?? '');
+    final statusController =
+        TextEditingController(text: supplier['status'] ?? '');
+
+    void showDeleteConfirmation() {
+      Get.dialog(
+        AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Yakin Ingin Menghapusnya?',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      suppliers.removeAt(idx);
+                      Get.back(); // close confirm
+                      Get.back(); // close edit
+                    },
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: const Text('Ya'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Get.back(),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    child: const Text('Tidak'),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
+        barrierDismissible: false,
+      );
+    }
+
+    Get.dialog(
+      StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Edit Data Suplier'),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Get.back(),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: kodeController,
+                  decoration: const InputDecoration(labelText: 'Kode sup:'),
+                ),
+                TextField(
+                  controller: namaController,
+                  decoration: const InputDecoration(labelText: 'Nama sup:'),
+                ),
+                TextField(
+                  controller: alamatController,
+                  decoration: const InputDecoration(labelText: 'Alamat sup:'),
+                ),
+                TextField(
+                  controller: telpController,
+                  decoration: const InputDecoration(labelText: 'No tlp sup:'),
+                  keyboardType: TextInputType.phone,
+                ),
+                TextField(
+                  controller: jenisController,
+                  decoration: const InputDecoration(labelText: 'Jenis barang:'),
+                ),
+                TextField(
+                  controller: catatanController,
+                  decoration: const InputDecoration(labelText: 'Catatan:'),
+                ),
+                TextField(
+                  controller: statusController,
+                  decoration: const InputDecoration(labelText: 'Status aktif:'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: showDeleteConfirmation,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Hapus'),
+            ),
+            TextButton(
+              onPressed: () => Get.back(),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.yellow[800],
+                backgroundColor: Colors.yellow[100],
+              ),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                suppliers[idx] = {
+                  'id': supplierId,
+                  'kode': kodeController.text,
+                  'name': namaController.text,
+                  'address': alamatController.text,
+                  'phone': telpController.text,
+                  'jenis': jenisController.text,
+                  'catatan': catatanController.text,
+                  'status': statusController.text,
+                };
+                Get.back();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text('Simpan'),
+            ),
+          ],
+        ),
       ),
     );
   }
