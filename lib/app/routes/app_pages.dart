@@ -15,15 +15,20 @@ import '../modules/supplier/views/supplier_view.dart';
 import '../modules/supplier/bindings/supplier_binding.dart';
 import '../modules/notification_reminder/views/notification_reminder_view.dart';
 import '../modules/notification_reminder/bindings/notification_reminder_binding.dart';
+import '../../splash_screen.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.LOGIN;
+  static const INITIAL = Routes.SPLASH;
 
   static final routes = [
+    GetPage(
+      name: Routes.SPLASH,
+      page: () => const SplashScreen(),
+    ),
     GetPage(
       name: Routes.LOGIN,
       page: () => const LoginView(),
