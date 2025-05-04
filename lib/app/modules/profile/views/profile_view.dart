@@ -82,21 +82,21 @@ class ProfileView extends GetView<ProfileController> {
             icon: Icons.shield_outlined,
             title: 'Detail Pribadi',
             onTap: () {
-              // TODO: Navigate to Personal Details
+              Get.toNamed('/personal-details');
             },
           ),
           _buildMenuItem(
             icon: Icons.lock_outline,
             title: 'Privasi akun',
             onTap: () {
-              // TODO: Navigate to Account Privacy
+              Get.toNamed('/account-privacy');
             },
           ),
           _buildMenuItem(
             icon: Icons.notifications_outlined,
             title: 'Notifikasi',
             onTap: () {
-              // TODO: Navigate to Notifications
+              Get.toNamed('/notifications');
             },
           ),
 

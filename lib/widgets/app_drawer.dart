@@ -93,8 +93,8 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // TODO: Navigate to Pengaturan
               Get.back();
+              Get.toNamed(Routes.PROFILE);
             },
           ),
         ],
