@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../app/data/models/product_model.dart';
+import '../../../data/models/product_model.dart';
 
 class SupplierController extends GetxController {
   final RxBool isLoading = false.obs;

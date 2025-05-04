@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../app/controllers/sales_partner_controller.dart';
-import '../../../app/data/models/partner_model.dart';
+import '../../../controllers/sales_partner_controller.dart';
+import '../../../data/models/partner_model.dart';
 
 class SalesPartnerView extends GetView<SalesPartnerController> {
   const SalesPartnerView({Key? key}) : super(key: key);

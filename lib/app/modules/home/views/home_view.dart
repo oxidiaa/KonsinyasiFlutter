@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../../app/routes/app_pages.dart';
-import '../../../widgets/app_drawer.dart';
+import '../../../routes/app_pages.dart';
+import '../../../../widgets/app_drawer.dart';
 
 class HomeView extends GetView {
   const HomeView({Key? key}) : super(key: key);
