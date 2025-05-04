@@ -113,16 +113,108 @@ class SupplierController extends GetxController {
   }
 
   void addSupplier() {
+    final kodeController = TextEditingController();
+    final namaController = TextEditingController();
+    final alamatController = TextEditingController();
+    final telpController = TextEditingController();
+    final jenisController = TextEditingController();
+    final catatanController = TextEditingController();
+    final statusController = TextEditingController();
+
     Get.dialog(
-      AlertDialog(
-        title: const Text('Add New Supplier'),
-        content: const Text('Add supplier feature coming soon'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Close'),
+      StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Masukan Data Suplier'),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Get.back(),
+              ),
+            ],
           ),
-        ],
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: kodeController,
+                  decoration: const InputDecoration(labelText: 'Kode sup:'),
+                ),
+                TextField(
+                  controller: namaController,
+                  decoration: const InputDecoration(labelText: 'Nama sup:'),
+                ),
+                TextField(
+                  controller: alamatController,
+                  decoration: const InputDecoration(labelText: 'Alamat sup:'),
+                ),
+                TextField(
+                  controller: telpController,
+                  decoration: const InputDecoration(labelText: 'No tlp sup:'),
+                  keyboardType: TextInputType.phone,
+                ),
+                TextField(
+                  controller: jenisController,
+                  decoration: const InputDecoration(labelText: 'Jenis barang:'),
+                ),
+                TextField(
+                  controller: catatanController,
+                  decoration: const InputDecoration(labelText: 'Catatan:'),
+                ),
+                TextField(
+                  controller: statusController,
+                  decoration: const InputDecoration(labelText: 'Status aktif:'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.yellow[800],
+                backgroundColor: Colors.yellow[100],
+              ),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Simpan data dummy
+                final newSupplier = {
+                  'id': DateTime.now().millisecondsSinceEpoch.toString(),
+                  'kode': kodeController.text,
+                  'name': namaController.text,
+                  'address': alamatController.text,
+                  'phone': telpController.text,
+                  'jenis': jenisController.text,
+                  'catatan': catatanController.text,
+                  'status': statusController.text,
+                };
+                suppliers.add(newSupplier);
+                Get.back();
+                // Notifikasi berhasil
+                Get.dialog(
+                  AlertDialog(
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text('Suplier Berhasil Ditambahkan',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Icon(Icons.close),
+                      ],
+                    ),
+                  ),
+                  barrierDismissible: true,
+                );
+                Future.delayed(const Duration(seconds: 1), () => Get.back());
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text('Simpan'),
+            ),
+          ],
+        ),
       ),
     );
   }
