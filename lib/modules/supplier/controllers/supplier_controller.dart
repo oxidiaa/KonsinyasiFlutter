@@ -246,6 +246,8 @@ class SupplierController extends GetxController {
                     DataColumn(label: Text('No')),
                     DataColumn(label: Text('List Product')),
                     DataColumn(label: Text('Harga')),
+                    DataColumn(label: Text('Stok Awal')),
+                    DataColumn(label: Text('Stok Akhir')),
                     DataColumn(label: Text('Action')),
                   ],
                   rows: supplierProducts[supplierId]!
@@ -265,6 +267,14 @@ class SupplierController extends GetxController {
                         ),
                         DataCell(
                           Text('Rp${product.price.toStringAsFixed(0)}'),
+                          onTap: () => showProductDetailDialog(product),
+                        ),
+                        DataCell(
+                          Text(product.initialQuantity.toString()),
+                          onTap: () => showProductDetailDialog(product),
+                        ),
+                        DataCell(
+                          Text(product.totalStock.toString()),
                           onTap: () => showProductDetailDialog(product),
                         ),
                         DataCell(
