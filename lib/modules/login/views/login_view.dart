@@ -30,7 +30,8 @@ class LoginView extends GetView<LoginController> {
                       height: 239,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('assets/images/Logoayu2.png'),
+                          image: AssetImage(
+                              'assets/images/logo.png'), // Perbaikan path
                           fit: BoxFit.fitWidth,
                         ),
                       ),
@@ -88,8 +89,8 @@ class LoginView extends GetView<LoginController> {
                                 icon: controller.isPasswordVisible.value
                                     ? const Icon(Icons.visibility,
                                         color: Color.fromRGBO(27, 149, 112, 1))
-                                    : Image.asset('assets/images/Closedeye.png',
-                                        width: 24, height: 24),
+                                    : const Icon(Icons.visibility_off,
+                                        color: Color.fromRGBO(27, 149, 112, 1)),
                                 onPressed: controller.togglePasswordVisibility,
                               ),
                             ),
