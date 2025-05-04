@@ -14,6 +14,28 @@ class SupplierController extends GetxController {
   void onInit() {
     super.onInit();
     loadSuppliers();
+    // Dummy produk untuk setiap supplier
+    supplierProducts.clear();
+    for (var s in _allSuppliers) {
+      supplierProducts[s['id']] = [
+        ProductModel(
+          id: '1',
+          name: 'Madu As Salamah 8 in 1',
+          initialQuantity: 10,
+          newQuantity: 5,
+          totalStock: 15,
+          price: 50000,
+        ),
+        ProductModel(
+          id: '2',
+          name: 'Madu Batuk Mumtaza',
+          initialQuantity: 8,
+          newQuantity: 2,
+          totalStock: 10,
+          price: 30000,
+        ),
+      ];
+    }
     searchController.addListener(() {
       searchQuery.value = searchController.text;
       filterSuppliers();
@@ -22,21 +44,21 @@ class SupplierController extends GetxController {
 
   // List of all suppliers (unfiltered)
   final List<Map<String, dynamic>> _allSuppliers = [
-    {'id': 1, 'name': 'Al-jazira', 'products': []},
-    {'id': 2, 'name': 'Supliyer B', 'products': []},
-    {'id': 3, 'name': 'Supliyer C', 'products': []},
-    {'id': 4, 'name': 'Supliyer D', 'products': []},
-    {'id': 5, 'name': 'Supliyer E', 'products': []},
-    {'id': 6, 'name': 'Supliyer F', 'products': []},
-    {'id': 7, 'name': 'Supliyer G', 'products': []},
-    {'id': 8, 'name': 'Supliyer H', 'products': []},
-    {'id': 9, 'name': 'Supliyer I', 'products': []},
-    {'id': 10, 'name': 'Supliyer J', 'products': []},
-    {'id': 11, 'name': 'Supliyer K', 'products': []},
-    {'id': 12, 'name': 'Supliyer L', 'products': []},
-    {'id': 13, 'name': 'Supliyer M', 'products': []},
-    {'id': 14, 'name': 'Supliyer N', 'products': []},
-    {'id': 15, 'name': 'Supliyer O', 'products': []},
+    {'id': '1', 'name': 'Al-jazira', 'products': []},
+    {'id': '2', 'name': 'Supliyer B', 'products': []},
+    {'id': '3', 'name': 'Supliyer C', 'products': []},
+    {'id': '4', 'name': 'Supliyer D', 'products': []},
+    {'id': '5', 'name': 'Supliyer E', 'products': []},
+    {'id': '6', 'name': 'Supliyer F', 'products': []},
+    {'id': '7', 'name': 'Supliyer G', 'products': []},
+    {'id': '8', 'name': 'Supliyer H', 'products': []},
+    {'id': '9', 'name': 'Supliyer I', 'products': []},
+    {'id': '10', 'name': 'Supliyer J', 'products': []},
+    {'id': '11', 'name': 'Supliyer K', 'products': []},
+    {'id': '12', 'name': 'Supliyer L', 'products': []},
+    {'id': '13', 'name': 'Supliyer M', 'products': []},
+    {'id': '14', 'name': 'Supliyer N', 'products': []},
+    {'id': '15', 'name': 'Supliyer O', 'products': []},
   ];
 
   void loadSuppliers() {
@@ -174,14 +196,50 @@ class SupplierController extends GetxController {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                supplierName,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    supplierName,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Product',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => addProduct(supplierId),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                    ),
+                    child: const Text('Tambah Barang'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Container(
+                color: Colors.grey[200],
+                height: 2,
+              ),
+              const SizedBox(height: 8),
               if (supplierProducts[supplierId] != null)
                 DataTable(
                   columns: const [
@@ -197,9 +255,18 @@ class SupplierController extends GetxController {
                     final product = entry.value;
                     return DataRow(
                       cells: [
-                        DataCell(Text('${entry.key + 1}')),
-                        DataCell(Text(product.name)),
-                        DataCell(Text('Rp ${product.price.toInt()}')),
+                        DataCell(
+                          Text('${entry.key + 1}'),
+                          onTap: () => showProductDetailDialog(product),
+                        ),
+                        DataCell(
+                          Text(product.name),
+                          onTap: () => showProductDetailDialog(product),
+                        ),
+                        DataCell(
+                          Text('Rp${product.price.toStringAsFixed(0)}'),
+                          onTap: () => showProductDetailDialog(product),
+                        ),
                         DataCell(
                           Row(
                             children: [
@@ -222,27 +289,42 @@ class SupplierController extends GetxController {
                     );
                   }).toList(),
                 ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Get.back(),
-                    child: const Text('Tutup'),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () => addProduct(supplierId),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text('Tambah Product'),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void showProductDetailDialog(ProductModel product) {
+    Get.dialog(
+      AlertDialog(
+        title: Text(product.name),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Harga: Rp${product.price.toStringAsFixed(0)}'),
+            Text('Stok Awal: ${product.initialQuantity}'),
+            Text('Stok Baru: ${product.newQuantity}'),
+            Text('Total Stok: ${product.totalStock}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Tutup'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              editProduct(
+                  'dummy', product.id); // Dummy, ganti supplierId jika perlu
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Edit'),
+          ),
+        ],
       ),
     );
   }
