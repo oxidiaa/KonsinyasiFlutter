@@ -77,6 +77,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               // TODO: Navigate to Notifikasi & Reminder
               Get.back();
+              Get.toNamed(Routes.NOTIFICATION_REMINDER);
             },
           ),
           ListTile(

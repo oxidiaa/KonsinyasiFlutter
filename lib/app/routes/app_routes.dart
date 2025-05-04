@@ -9,4 +9,5 @@ abstract class Routes {
   static const PRINT_INVOICE = '/print-invoice';
   static const PROFILE = '/profile';
   static const SUPPLIER = '/supplier';
+  static const NOTIFICATION_REMINDER = '/notification-reminder';
 }
