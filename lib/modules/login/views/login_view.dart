@@ -10,68 +10,145 @@ class LoginView extends GetView<LoginController> {
   Widget build(BuildContext context) {
     print('🟢 LOGIN VIEW');
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Welcome Back',
-                style: AppTheme.heading1,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Please login to continue',
-                style: AppTheme.body1.copyWith(color: Colors.grey),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 48),
-              TextField(
-                controller: controller.usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                  prefixIcon: const Icon(Icons.person),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Obx(() => TextField(
-                    controller: controller.passwordController,
-                    obscureText: !controller.isPasswordVisible.value,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          controller.isPasswordVisible.value
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+        child: Stack(
+          children: [
+            // Main content in a scrollable container
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24.0, 80.0, 24.0, 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 20),
+
+                    // Logo image from Figma
+                    Container(
+                      width: 247,
+                      height: 239,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/Logoayu2.png'),
+                          fit: BoxFit.fitWidth,
                         ),
-                        onPressed: controller.togglePasswordVisibility,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                  )),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: controller.login,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                    const SizedBox(height: 20),
+
+                    // Email field with styling from Figma
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: const Color.fromRGBO(27, 149, 112, 1),
+                          width: 3,
+                        ),
+                      ),
+                      child: TextField(
+                        controller: controller.usernameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                          border: InputBorder.none,
+                          labelStyle: TextStyle(
+                            color: Color.fromRGBO(0, 0, 0, 0.35),
+                            fontFamily: 'Rubik',
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 33),
+
+                    // Password field with styling from Figma
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: const Color.fromRGBO(27, 149, 112, 1),
+                          width: 3,
+                        ),
+                      ),
+                      child: Obx(() => TextField(
+                            controller: controller.passwordController,
+                            obscureText: !controller.isPasswordVisible.value,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              border: InputBorder.none,
+                              labelStyle: const TextStyle(
+                                color: Color.fromRGBO(0, 0, 0, 0.35),
+                                fontFamily: 'Rubik',
+                                fontSize: 16,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: controller.isPasswordVisible.value
+                                    ? const Icon(Icons.visibility,
+                                        color: Color.fromRGBO(27, 149, 112, 1))
+                                    : Image.asset('assets/images/Closedeye.png',
+                                        width: 24, height: 24),
+                                onPressed: controller.togglePasswordVisibility,
+                              ),
+                            ),
+                          )),
+                    ),
+
+                    // Forgot Password text
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          // Add your forgot password logic here
+                        },
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Color.fromRGBO(27, 149, 112, 1),
+                            fontFamily: 'Rubik',
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Login button with styling from Figma
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: controller.login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromRGBO(27, 149, 112, 1),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 12),
+                            side: const BorderSide(
+                              color: Color.fromRGBO(27, 149, 112, 1),
+                              width: 3,
+                            ),
+                          ),
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: const Text('Login'),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
