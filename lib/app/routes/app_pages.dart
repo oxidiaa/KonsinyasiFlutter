@@ -19,16 +19,13 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/sales_partner/views/sales_partner_view.dart';
 import '../modules/supplier/bindings/supplier_binding.dart';
-<<<<<<< HEAD
 import '../modules/supplier/views/supplier_view.dart';
-=======
 import '../modules/notification_reminder/views/notification_reminder_view.dart';
 import '../modules/notification_reminder/bindings/notification_reminder_binding.dart';
 import '../modules/profile/views/personal_details_view.dart';
 import '../modules/profile/views/account_privacy_view.dart';
 import '../modules/profile/views/notifications_view.dart';
 import '../../splash_screen.dart';
->>>>>>> 99db0c67083e68617c178440f49a1d0ab9e33701
 
 part 'app_routes.dart';
 
@@ -83,7 +80,6 @@ class AppPages {
       binding: NotificationReminderBinding(),
     ),
     GetPage(
-<<<<<<< HEAD
       name: Routes.BILLING,
       page: () => BillingView(),
       binding: BillingBinding(),
@@ -92,18 +88,19 @@ class AppPages {
       name: Routes.BILL_PEMBELIAN,
       page: () => BillPembelianView(),
       binding: BillPembelianBinding(),
-=======
-      name: '/personal-details',
-      page: () => const PersonalDetailsView(),
     ),
-    GetPage(
-      name: '/account-privacy',
-      page: () => const AccountPrivacyView(),
-    ),
-    GetPage(
-      name: '/notifications',
-      page: () => const NotificationsView(),
->>>>>>> 99db0c67083e68617c178440f49a1d0ab9e33701
-    ),
+    // Uncomment or add additional routes as needed
+    // GetPage(
+    //   name: '/personal-details',
+    //   page: () => const PersonalDetailsView(),
+    // ),
+    // GetPage(
+    //   name: '/account-privacy',
+    //   page: () => const AccountPrivacyView(),
+    // ),
+    // GetPage(
+    //   name: '/notifications',
+    //   page: () => const NotificationsView(),
+    // ),
   ];
 }
