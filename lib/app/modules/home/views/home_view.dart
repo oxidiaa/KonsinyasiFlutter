@@ -34,7 +34,10 @@ class HomeView extends GetView {
               color: Colors.green,
               size: 28,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed(
+                  '/notification-reminder'); // Navigate to notification page
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),

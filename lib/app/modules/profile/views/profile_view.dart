@@ -20,7 +20,10 @@ class ProfileView extends GetView<ProfileController> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Get.back(),
+          // onPressed: () => Get.back(),
+          onPressed: () {
+            Get.toNamed('/home');
+          },
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -35,8 +38,7 @@ class ProfileView extends GetView<ProfileController> {
                 // Profile Image
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage:
-                      const AssetImage('assets/images/profile.jpg'),
+                  backgroundImage: const AssetImage('assets/images/profil.jpg'),
                 ),
                 const SizedBox(width: 16),
                 // Name and Email

@@ -22,7 +22,9 @@ class NotificationReminderView extends GetView<NotificationReminderController> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Get.toNamed('/home'); // Navigate back to the home page
+          },
         ),
       ),
       body: Column(

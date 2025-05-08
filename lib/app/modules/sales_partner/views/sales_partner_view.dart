@@ -15,8 +15,11 @@ class SalesPartnerView extends GetView<SalesPartnerController> {
         foregroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            Get.toNamed('/home'); // Navigate back to the home page
+          },
+          // Get.toNamed('/home'); // Navigate back to the home page
         ),
       ),
       body: Column(
