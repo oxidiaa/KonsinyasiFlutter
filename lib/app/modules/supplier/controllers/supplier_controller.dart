@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/models/product_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../data/providers/supabase_provider.dart';
+
+class ProductModel {
+  final String id;
+  final String name;
+  final int initialQuantity;
+  final int newQuantity;
+  final int totalStock;
+  final double price;
+
+  ProductModel({
+    required this.id,
+    required this.name,
+    required this.initialQuantity,
+    required this.newQuantity,
+    required this.totalStock,
+    required this.price,
+  });
+}
 
 class SupplierController extends GetxController {
   final RxBool isLoading = false.obs;
@@ -10,60 +29,26 @@ class SupplierController extends GetxController {
   final TextEditingController searchController = TextEditingController();
   final RxString searchQuery = ''.obs;
 
+  final List<Map<String, dynamic>> _allSuppliers = [];
+
+  final SuplierProvider suplierProvider = SuplierProvider();
+
   @override
   void onInit() {
     super.onInit();
-    loadSuppliers();
-    // Dummy produk untuk setiap supplier
-    supplierProducts.clear();
-    for (var s in _allSuppliers) {
-      supplierProducts[s['id']] = [
-        ProductModel(
-          id: '1',
-          name: 'Madu As Salamah 8 in 1',
-          initialQuantity: 10,
-          newQuantity: 5,
-          totalStock: 15,
-          price: 50000,
-        ),
-        ProductModel(
-          id: '2',
-          name: 'Madu Batuk Mumtaza',
-          initialQuantity: 8,
-          newQuantity: 2,
-          totalStock: 10,
-          price: 30000,
-        ),
-      ];
-    }
+    fetchSuppliers();
     searchController.addListener(() {
       searchQuery.value = searchController.text;
       filterSuppliers();
     });
   }
 
-  // List of all suppliers (unfiltered)
-  final List<Map<String, dynamic>> _allSuppliers = [
-    {'id': '1', 'name': 'Al-jazira', 'products': []},
-    {'id': '2', 'name': 'Supliyer B', 'products': []},
-    {'id': '3', 'name': 'Supliyer C', 'products': []},
-    {'id': '4', 'name': 'Supliyer D', 'products': []},
-    {'id': '5', 'name': 'Supliyer E', 'products': []},
-    {'id': '6', 'name': 'Supliyer F', 'products': []},
-    {'id': '7', 'name': 'Supliyer G', 'products': []},
-    {'id': '8', 'name': 'Supliyer H', 'products': []},
-    {'id': '9', 'name': 'Supliyer I', 'products': []},
-    {'id': '10', 'name': 'Supliyer J', 'products': []},
-    {'id': '11', 'name': 'Supliyer K', 'products': []},
-    {'id': '12', 'name': 'Supliyer L', 'products': []},
-    {'id': '13', 'name': 'Supliyer M', 'products': []},
-    {'id': '14', 'name': 'Supliyer N', 'products': []},
-    {'id': '15', 'name': 'Supliyer O', 'products': []},
-  ];
-
-  void loadSuppliers() {
+  Future<void> fetchSuppliers() async {
     try {
       isLoading.value = true;
+      final data = await suplierProvider.fetchSuplier();
+      _allSuppliers.clear();
+      _allSuppliers.addAll(data);
       suppliers.value = List.from(_allSuppliers);
     } catch (e) {
       Get.snackbar(
@@ -83,7 +68,6 @@ class SupplierController extends GetxController {
       suppliers.value = List.from(_allSuppliers);
       return;
     }
-
     final query = searchQuery.value.toLowerCase();
     suppliers.value = _allSuppliers.where((supplier) {
       final name = supplier['name'].toString().toLowerCase();
@@ -91,149 +75,37 @@ class SupplierController extends GetxController {
     }).toList();
   }
 
-  void viewProducts(int supplierId) {
-    final supplier = _allSuppliers.firstWhere(
-      (s) => s['id'] == supplierId,
-      orElse: () => {},
-    );
-
-    if (supplier.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Supplier not found',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    // TODO: Navigate to supplier products page
-    Get.toNamed('/supplier-products', arguments: supplier);
+  void addSupplierDialog(BuildContext context) {
+    // Implementasi dialog tambah supplier sudah ada di supplier_view.dart
+    // Fungsi ini bisa dipanggil dari view jika ingin trigger dari controller
   }
 
-  void addSupplier() {
-    final kodeController = TextEditingController();
-    final namaController = TextEditingController();
-    final alamatController = TextEditingController();
-    final telpController = TextEditingController();
-    final jenisController = TextEditingController();
-    final catatanController = TextEditingController();
-    final statusController = TextEditingController();
-
-    Get.dialog(
-      StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Masukan Data Suplier'),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Get.back(),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: kodeController,
-                  decoration: const InputDecoration(labelText: 'Kode sup:'),
-                ),
-                TextField(
-                  controller: namaController,
-                  decoration: const InputDecoration(labelText: 'Nama sup:'),
-                ),
-                TextField(
-                  controller: alamatController,
-                  decoration: const InputDecoration(labelText: 'Alamat sup:'),
-                ),
-                TextField(
-                  controller: telpController,
-                  decoration: const InputDecoration(labelText: 'No tlp sup:'),
-                  keyboardType: TextInputType.phone,
-                ),
-                TextField(
-                  controller: jenisController,
-                  decoration: const InputDecoration(labelText: 'Jenis barang:'),
-                ),
-                TextField(
-                  controller: catatanController,
-                  decoration: const InputDecoration(labelText: 'Catatan:'),
-                ),
-                TextField(
-                  controller: statusController,
-                  decoration: const InputDecoration(labelText: 'Status aktif:'),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Get.back(),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.yellow[800],
-                backgroundColor: Colors.yellow[100],
-              ),
-              child: const Text('Batal'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Simpan data dummy
-                final newSupplier = {
-                  'id': DateTime.now().millisecondsSinceEpoch.toString(),
-                  'kode': kodeController.text,
-                  'name': namaController.text,
-                  'address': alamatController.text,
-                  'phone': telpController.text,
-                  'jenis': jenisController.text,
-                  'catatan': catatanController.text,
-                  'status': statusController.text,
-                };
-                suppliers.add(newSupplier);
-                Get.back();
-                // Notifikasi berhasil
-                Get.dialog(
-                  AlertDialog(
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text('Suplier Berhasil Ditambahkan',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Icon(Icons.close),
-                      ],
-                    ),
-                  ),
-                  barrierDismissible: true,
-                );
-                Future.delayed(const Duration(seconds: 1), () => Get.back());
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: const Text('Simpan'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void editSupplier(String supplierId) {
-    final idx = suppliers.indexWhere((s) => s['id'] == supplierId);
+  void editSupplier(dynamic supplierId) {
+    final idx = suppliers
+        .indexWhere((s) => s['id'].toString() == supplierId.toString());
     if (idx == -1) return;
     final supplier = suppliers[idx];
-    final kodeController = TextEditingController(text: supplier['kode'] ?? '');
-    final namaController = TextEditingController(text: supplier['name'] ?? '');
+    // Samakan field dengan addSupplierToDb dan database
+    final namaController =
+        TextEditingController(text: supplier['nama_spr'] ?? '');
     final alamatController =
-        TextEditingController(text: supplier['address'] ?? '');
-    final telpController = TextEditingController(text: supplier['phone'] ?? '');
-    final jenisController =
-        TextEditingController(text: supplier['jenis'] ?? '');
-    final catatanController =
-        TextEditingController(text: supplier['catatan'] ?? '');
+        TextEditingController(text: supplier['alamat_spr'] ?? '');
+    final teleponController =
+        TextEditingController(text: supplier['telepon_spr'] ?? '');
+    final emailController =
+        TextEditingController(text: supplier['email_spr'] ?? '');
+    final npwpController = TextEditingController(text: supplier['npwp'] ?? '');
+    final jenisProdukController =
+        TextEditingController(text: supplier['jenis_produk'] ?? '');
     final statusController =
         TextEditingController(text: supplier['status'] ?? '');
+    final tanggalBergabungController =
+        TextEditingController(text: supplier['tanggal_bergabung'] ?? '');
+    final bankController = TextEditingController(text: supplier['bank'] ?? '');
+    final noRekeningController =
+        TextEditingController(text: supplier['no_rekening'] ?? '');
+    final catatanController =
+        TextEditingController(text: supplier['catatan'] ?? '');
 
     void showDeleteConfirmation() {
       Get.dialog(
@@ -251,8 +123,8 @@ class SupplierController extends GetxController {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      suppliers.removeAt(idx);
+                    onPressed: () async {
+                      await deleteSupplier(supplierId);
                       Get.back(); // close confirm
                       Get.back(); // close edit
                     },
@@ -275,251 +147,403 @@ class SupplierController extends GetxController {
       );
     }
 
-    Get.dialog(
-      StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Edit Data Suplier'),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Get.back(),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: kodeController,
-                  decoration: const InputDecoration(labelText: 'Kode sup:'),
-                ),
-                TextField(
-                  controller: namaController,
-                  decoration: const InputDecoration(labelText: 'Nama sup:'),
-                ),
-                TextField(
-                  controller: alamatController,
-                  decoration: const InputDecoration(labelText: 'Alamat sup:'),
-                ),
-                TextField(
-                  controller: telpController,
-                  decoration: const InputDecoration(labelText: 'No tlp sup:'),
-                  keyboardType: TextInputType.phone,
-                ),
-                TextField(
-                  controller: jenisController,
-                  decoration: const InputDecoration(labelText: 'Jenis barang:'),
-                ),
-                TextField(
-                  controller: catatanController,
-                  decoration: const InputDecoration(labelText: 'Catatan:'),
-                ),
-                TextField(
-                  controller: statusController,
-                  decoration: const InputDecoration(labelText: 'Status aktif:'),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: showDeleteConfirmation,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Hapus'),
-            ),
-            TextButton(
+    Get.dialog(StatefulBuilder(
+      builder: (context, setState) => AlertDialog(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Edit Data Suplier'),
+            IconButton(
+              icon: const Icon(Icons.close),
               onPressed: () => Get.back(),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.yellow[800],
-                backgroundColor: Colors.yellow[100],
-              ),
-              child: const Text('Batal'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                suppliers[idx] = {
-                  'id': supplierId,
-                  'kode': kodeController.text,
-                  'name': namaController.text,
-                  'address': alamatController.text,
-                  'phone': telpController.text,
-                  'jenis': jenisController.text,
-                  'catatan': catatanController.text,
-                  'status': statusController.text,
-                };
-                Get.back();
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: const Text('Simpan'),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void deleteSupplier(int supplierId) {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: const Text('Are you sure you want to delete this supplier?'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: namaController,
+                decoration: const InputDecoration(labelText: 'Nama Supplier'),
+              ),
+              TextField(
+                controller: alamatController,
+                decoration: const InputDecoration(labelText: 'Alamat'),
+              ),
+              TextField(
+                controller: teleponController,
+                decoration: const InputDecoration(labelText: 'Telepon'),
+                keyboardType: TextInputType.phone,
+              ),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              TextField(
+                controller: npwpController,
+                decoration: const InputDecoration(labelText: 'NPWP'),
+              ),
+              TextField(
+                controller: jenisProdukController,
+                decoration: const InputDecoration(labelText: 'Jenis Produk'),
+              ),
+              TextField(
+                controller: statusController,
+                decoration: const InputDecoration(labelText: 'Status'),
+              ),
+              TextField(
+                controller: tanggalBergabungController,
+                decoration:
+                    const InputDecoration(labelText: 'Tanggal Bergabung'),
+              ),
+              TextField(
+                controller: bankController,
+                decoration: const InputDecoration(labelText: 'Bank'),
+              ),
+              TextField(
+                controller: noRekeningController,
+                decoration: const InputDecoration(labelText: 'No Rekening'),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: catatanController,
+                decoration: const InputDecoration(labelText: 'Catatan'),
+                maxLines: 3,
+              ),
+            ],
+          ),
+        ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+          ElevatedButton(
+            onPressed: showDeleteConfirmation,
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Hapus'),
           ),
           TextButton(
-            onPressed: () {
-              // Remove from both lists
-              _allSuppliers.removeWhere((s) => s['id'] == supplierId);
-              suppliers.removeWhere((s) => s['id'] == supplierId);
-              Get.back();
-              Get.snackbar(
-                'Success',
-                'Supplier deleted successfully',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.green,
-                colorText: Colors.white,
-              );
+            onPressed: () => Get.back(),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.yellow[800],
+              backgroundColor: Colors.yellow[100],
+            ),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              // Validasi
+              if (namaController.text.isEmpty ||
+                  alamatController.text.isEmpty ||
+                  teleponController.text.isEmpty ||
+                  emailController.text.isEmpty ||
+                  jenisProdukController.text.isEmpty ||
+                  statusController.text.isEmpty) {
+                Get.snackbar(
+                  'Peringatan',
+                  'Field wajib tidak boleh kosong!',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+                return;
+              }
+              try {
+                final supabase = Supabase.instance.client;
+                final response = await supabase
+                    .from('suplier')
+                    .update({
+                      'nama_spr': namaController.text,
+                      'alamat_spr': alamatController.text,
+                      'telepon_spr': teleponController.text,
+                      'email_spr': emailController.text,
+                      'npwp': npwpController.text,
+                      'jenis_produk': jenisProdukController.text,
+                      'status': statusController.text,
+                      'tanggal_bergabung': tanggalBergabungController.text,
+                      'bank': bankController.text,
+                      'no_rekening': noRekeningController.text,
+                      'catatan': catatanController.text,
+                    })
+                    .eq('id', supplierId)
+                    .execute();
+                if (response.error != null) {
+                  Get.snackbar(
+                    'Error',
+                    response.error!.message,
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                } else {
+                  Get.back();
+                  Get.snackbar(
+                    'Sukses',
+                    'Suplier berhasil diupdate',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                  );
+                  await fetchSuppliers();
+                }
+              } catch (e) {
+                Get.snackbar(
+                  'Error',
+                  e.toString(),
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              }
             },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Simpan'),
           ),
         ],
       ),
-    );
+    ));
   }
 
-  void searchSuppliers(String query) {
-    if (query.isEmpty) {
-      loadSuppliers();
-      return;
+  Future<void> addSupplierToDb({
+    required String nama,
+    required String alamat,
+    required String telepon,
+    required String email,
+    String? npwp,
+    required String jenisProduk,
+    String status = 'aktif',
+    String? tanggalBergabung,
+    String? bank,
+    String? noRekening,
+    String? catatan,
+  }) async {
+    try {
+      await suplierProvider.insertSuplier(
+        nama: nama,
+        alamat: alamat,
+        telepon: telepon,
+        email: email,
+        npwp: npwp,
+        jenisProduk: jenisProduk,
+        status: status,
+        tanggalBergabung: tanggalBergabung,
+        bank: bank,
+        noRekening: noRekening,
+        catatan: catatan,
+      );
+      await fetchSuppliers();
+      Get.snackbar(
+        'Sukses',
+        'Suplier berhasil ditambahkan',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
-    final filtered = suppliers
-        .where((supplier) => supplier['name']
-            .toString()
-            .toLowerCase()
-            .contains(query.toLowerCase()))
-        .toList();
-    suppliers.value = filtered;
+  }
+
+  Future<void> updateSupplierInDb({
+    required int id,
+    required String nama,
+    required String alamat,
+    required String telepon,
+    required String email,
+    String? npwp,
+    required String jenisProduk,
+    String status = 'aktif',
+    String? tanggalBergabung,
+    String? bank,
+    String? noRekening,
+    String? catatan,
+  }) async {
+    try {
+      await suplierProvider.updateSuplier(
+        id: id,
+        nama: nama,
+        alamat: alamat,
+        telepon: telepon,
+        email: email,
+        npwp: npwp,
+        jenisProduk: jenisProduk,
+        status: status,
+        tanggalBergabung: tanggalBergabung,
+        bank: bank,
+        noRekening: noRekening,
+        catatan: catatan,
+      );
+      await fetchSuppliers();
+      Get.snackbar(
+        'Sukses',
+        'Suplier berhasil diupdate',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> deleteSupplier(dynamic supplierId) async {
+    try {
+      await suplierProvider.deleteSuplier(supplierId);
+      await fetchSuppliers();
+      Get.snackbar(
+        'Success',
+        'Supplier deleted successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   void showProductList(String supplierId, String supplierName) {
     Get.dialog(
       Dialog(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    supplierName,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Get.back(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Product',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => addProduct(supplierId),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                    ),
-                    child: const Text('Tambah Barang'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                color: Colors.grey[200],
-                height: 2,
-              ),
-              const SizedBox(height: 8),
-              if (supplierProducts[supplierId] != null)
-                DataTable(
-                  columns: const [
-                    DataColumn(label: Text('No')),
-                    DataColumn(label: Text('List Product')),
-                    DataColumn(label: Text('Harga')),
-                    DataColumn(label: Text('Stok Awal')),
-                    DataColumn(label: Text('Stok Akhir')),
-                    DataColumn(label: Text('Action')),
-                  ],
-                  rows: supplierProducts[supplierId]!
-                      .asMap()
-                      .entries
-                      .map((entry) {
-                    final product = entry.value;
-                    return DataRow(
-                      cells: [
-                        DataCell(
-                          Text('${entry.key + 1}'),
-                          onTap: () => showProductDetailDialog(product),
-                        ),
-                        DataCell(
-                          Text(product.name),
-                          onTap: () => showProductDetailDialog(product),
-                        ),
-                        DataCell(
-                          Text('Rp${product.price.toStringAsFixed(0)}'),
-                          onTap: () => showProductDetailDialog(product),
-                        ),
-                        DataCell(
-                          Text(product.initialQuantity.toString()),
-                          onTap: () => showProductDetailDialog(product),
-                        ),
-                        DataCell(
-                          Text(product.totalStock.toString()),
-                          onTap: () => showProductDetailDialog(product),
-                        ),
-                        DataCell(
-                          Row(
-                            children: [
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.edit, color: Colors.green),
-                                onPressed: () =>
-                                    editProduct(supplierId, product.id),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete,
-                                    color: Colors.green),
-                                onPressed: () =>
-                                    deleteProduct(supplierId, product.id),
-                              ),
-                            ],
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: ProdukAljaziraProvider().fetchAllProduk(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                height: 200,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+            final produkList = snapshot.data ?? [];
+            return Container(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          supplierName,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Get.back(),
+                        ),
                       ],
-                    );
-                  }).toList(),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Product',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => addProductToDbDialog(supplierId),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                          ),
+                          child: const Text('Tambah Barang'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      color: Colors.grey[200],
+                      height: 2,
+                    ),
+                    const SizedBox(height: 8),
+                    if (produkList.isEmpty)
+                      const Text('Belum ada produk pada database.')
+                    else
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: produkList.length,
+                        itemBuilder: (context, index) {
+                          final produk = produkList[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 6),
+                            elevation: 2,
+                            child: ListTile(
+                              leading: produk['gambar_produk'] != null &&
+                                      produk['gambar_produk']
+                                          .toString()
+                                          .isNotEmpty
+                                  ? Image.network(
+                                      produk['gambar_produk'],
+                                      width: 48,
+                                      height: 48,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) =>
+                                          const Icon(Icons.image_not_supported),
+                                    )
+                                  : const Icon(Icons.inventory_2,
+                                      size: 40, color: Colors.green),
+                              title: Text(produk['nama_produk'] ?? ''),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Kode: ${produk['kode_produk'] ?? ''}'),
+                                  Text(
+                                      'Harga Beli: Rp${produk['harga_beli'] ?? 0}'),
+                                  Text(
+                                      'Harga Jual: Rp${produk['harga_jual'] ?? 0}'),
+                                  Text(
+                                      'Stok: ${produk['stok'] ?? 0} ${produk['satuan'] ?? ''}'),
+                                  if (produk['tanggal_kadaluarsa'] != null)
+                                    Text(
+                                        'Kadaluarsa: ${produk['tanggal_kadaluarsa']}'),
+                                  Text('Status: ${produk['status'] ?? ''}'),
+                                ],
+                              ),
+                              trailing: Icon(
+                                produk['status'] == 'aktif'
+                                    ? Icons.check_circle
+                                    : Icons.cancel,
+                                color: produk['status'] == 'aktif'
+                                    ? Colors.green
+                                    : Colors.red,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                  ],
                 ),
-            ],
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -730,6 +754,144 @@ class SupplierController extends GetxController {
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void addProductToDbDialog(String supplierId) {
+    final formKey = GlobalKey<FormState>();
+    final kodeProdukController = TextEditingController();
+    final namaProdukController = TextEditingController();
+    final deskripsiController = TextEditingController();
+    final hargaBeliController = TextEditingController();
+    final hargaJualController = TextEditingController();
+    final stokController = TextEditingController();
+    final satuanController = TextEditingController();
+    final tanggalKadaluarsaController = TextEditingController();
+    final gambarProdukController = TextEditingController();
+    final statusController = TextEditingController(text: 'aktif');
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Tambah Produk Suplier'),
+        content: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: kodeProdukController,
+                  decoration: const InputDecoration(labelText: 'Kode Produk'),
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Wajib diisi' : null,
+                ),
+                TextFormField(
+                  controller: namaProdukController,
+                  decoration: const InputDecoration(labelText: 'Nama Produk'),
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Wajib diisi' : null,
+                ),
+                TextFormField(
+                  controller: deskripsiController,
+                  decoration: const InputDecoration(labelText: 'Deskripsi'),
+                  maxLines: 2,
+                ),
+                TextFormField(
+                  controller: hargaBeliController,
+                  decoration: const InputDecoration(labelText: 'Harga Beli'),
+                  keyboardType: TextInputType.number,
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Wajib diisi' : null,
+                ),
+                TextFormField(
+                  controller: hargaJualController,
+                  decoration: const InputDecoration(labelText: 'Harga Jual'),
+                  keyboardType: TextInputType.number,
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Wajib diisi' : null,
+                ),
+                TextFormField(
+                  controller: stokController,
+                  decoration: const InputDecoration(labelText: 'Stok'),
+                  keyboardType: TextInputType.number,
+                ),
+                TextFormField(
+                  controller: satuanController,
+                  decoration: const InputDecoration(labelText: 'Satuan'),
+                ),
+                TextFormField(
+                  controller: tanggalKadaluarsaController,
+                  decoration: const InputDecoration(
+                      labelText: 'Tanggal Kadaluarsa (YYYY-MM-DD)'),
+                  keyboardType: TextInputType.datetime,
+                ),
+                TextFormField(
+                  controller: gambarProdukController,
+                  decoration:
+                      const InputDecoration(labelText: 'URL Gambar Produk'),
+                ),
+                DropdownButtonFormField<String>(
+                  value: statusController.text,
+                  decoration: const InputDecoration(labelText: 'Status'),
+                  items: const [
+                    DropdownMenuItem(value: 'aktif', child: Text('Aktif')),
+                    DropdownMenuItem(
+                        value: 'non-aktif', child: Text('Non-Aktif')),
+                  ],
+                  onChanged: (val) {
+                    statusController.text = val ?? 'aktif';
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                try {
+                  await ProdukAljaziraProvider().insertProdukAljazira(
+                    kodeProduk: kodeProdukController.text,
+                    namaProduk: namaProdukController.text,
+                    idSpr: int.tryParse(supplierId),
+                    deskripsi: deskripsiController.text,
+                    hargaBeli: double.tryParse(hargaBeliController.text) ?? 0,
+                    hargaJual: double.tryParse(hargaJualController.text) ?? 0,
+                    stok: int.tryParse(stokController.text) ?? 0,
+                    satuan: satuanController.text,
+                    tanggalKadaluarsa: tanggalKadaluarsaController.text,
+                    gambarProduk: gambarProdukController.text,
+                    status: statusController.text,
+                  );
+                  Get.back();
+                  Get.snackbar(
+                    'Sukses',
+                    'Produk berhasil ditambahkan',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                  );
+                } catch (e) {
+                  Get.snackbar(
+                    'Error',
+                    e.toString(),
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Simpan'),
           ),
         ],
       ),

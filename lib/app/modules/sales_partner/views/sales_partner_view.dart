@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/sales_partner_controller.dart';
-import '../../../data/models/partner_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../controllers/sales_partner_controller.dart';
 
 class SalesPartnerView extends GetView<SalesPartnerController> {
   const SalesPartnerView({Key? key}) : super(key: key);
@@ -219,15 +219,65 @@ class SalesPartnerView extends GetView<SalesPartnerController> {
             child: const Text('Batal'),
           ),
           ElevatedButton(
-            onPressed: () {
-              final newPartner = PartnerModel(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                name: nameController.text,
-                address: addressController.text,
-                phone: phoneController.text,
-                email: emailController.text,
-              );
-              controller.createPartner(newPartner);
+            onPressed: () async {
+              final supabase = Supabase.instance.client;
+              final nama = nameController.text;
+              final alamat = addressController.text;
+              final telepon = phoneController.text;
+              final email = emailController.text;
+
+              if (nama.isEmpty ||
+                  alamat.isEmpty ||
+                  telepon.isEmpty ||
+                  email.isEmpty) {
+                Get.snackbar(
+                  'Error',
+                  'Semua field harus diisi',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+                return;
+              }
+
+              final response = await supabase.from('mitra').insert({
+                'nama_mtr': nama,
+                'alamat_mtr': alamat,
+                'telepon_mtr': telepon,
+                'email_mtr': email,
+              }).execute();
+
+              if (response.error != null) {
+                // Cek error unique constraint
+                if (response.error!.message.contains('duplicate key value') ||
+                    response.error!.message.contains('unique constraint')) {
+                  Get.snackbar(
+                    'Gagal',
+                    'Nama, email, atau telepon sudah terdaftar!',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                } else {
+                  Get.snackbar(
+                    'Gagal',
+                    response.error!.message,
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              } else {
+                Get.back(); // Tutup dialog
+                Get.snackbar(
+                  'Sukses',
+                  'Mitra berhasil ditambahkan',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.green,
+                  colorText: Colors.white,
+                );
+                controller.fetchPartners();
+              }
             },
             child: const Text('Simpan'),
           ),

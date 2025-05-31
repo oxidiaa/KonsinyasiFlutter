@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/invoice_controller.dart';
+import '../controllers/invoice_controller.dart';
 import 'package:intl/intl.dart';
 // import 'package:intl/intl.dart';
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/login_controller.dart';
-import '../../../core/theme/app_theme.dart';
+import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({Key? key}) : super(key: key);
@@ -53,7 +52,7 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                       child: TextField(
-                        controller: controller.usernameController,
+                        controller: controller.emailController,
                         decoration: const InputDecoration(
                           labelText: 'Email',
                           contentPadding: EdgeInsets.symmetric(horizontal: 12),
@@ -79,7 +78,7 @@ class LoginView extends GetView<LoginController> {
                       ),
                       child: Obx(() => TextField(
                             controller: controller.passwordController,
-                            obscureText: !controller.isPasswordVisible.value,
+                            obscureText: !controller.isPasswordVisible,
                             decoration: InputDecoration(
                               labelText: 'Password',
                               contentPadding:
@@ -91,7 +90,7 @@ class LoginView extends GetView<LoginController> {
                                 fontSize: 16,
                               ),
                               suffixIcon: IconButton(
-                                icon: controller.isPasswordVisible.value
+                                icon: controller.isPasswordVisible
                                     ? const Icon(Icons.visibility,
                                         color: Color.fromRGBO(27, 149, 112, 1))
                                     : const Icon(Icons.visibility_off,
@@ -125,7 +124,9 @@ class LoginView extends GetView<LoginController> {
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Center(
                         child: ElevatedButton(
-                          onPressed: controller.login,
+                          onPressed: () {
+                            Get.offAllNamed('/home');
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 const Color.fromRGBO(27, 149, 112, 1),

@@ -13,4 +13,5 @@ abstract class Routes {
   static const NOTIFICATION_REMINDER = '/notification-reminder';
   static const BILLING = '/billing';
   static const BILL_PEMBELIAN = '/bill-pembelian';
+  static const PRODUK = '/produk';
 }

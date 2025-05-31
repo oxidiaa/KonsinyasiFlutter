@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/print_invoice_controller.dart';
+import '../controllers/print_invoice_controller.dart';
 
 class PrintInvoiceView extends GetView<PrintInvoiceController> {
   const PrintInvoiceView({Key? key}) : super(key: key);

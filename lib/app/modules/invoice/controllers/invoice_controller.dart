@@ -1,61 +1,85 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+
+// Model Product
+class Product {
+  final String name;
+  final int initialQuantity;
+  final int newQuantity;
+  final int totalStock;
+
+  Product({
+    required this.name,
+    required this.initialQuantity,
+    required this.newQuantity,
+    required this.totalStock,
+  });
+}
+
+// Model Invoice
+class Invoice {
+  final DateTime date;
+  final List<Product> products;
+
+  Invoice({
+    required this.date,
+    required this.products,
+  });
+}
 
 class InvoiceController extends GetxController {
   final RxBool isLoading = false.obs;
-  final RxList products = [].obs;
   final RxString selectedMonth = ''.obs;
-  final RxMap partner = {}.obs;
+  final RxString partnerName = ''.obs;
+  final invoices = <Invoice>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Get partner ID from arguments
     final partnerId = Get.arguments as int;
     loadPartnerData(partnerId);
-    loadProducts();
+    loadInvoices();
   }
 
   void loadPartnerData(int partnerId) {
     // Dummy partner data for testing
-    partner.value = {
-      'id': partnerId,
-      'name': 'Partner $partnerId',
-      'address': 'Jl. Example No. $partnerId',
-      'phone': '08123456789',
-    };
+    partnerName.value = 'Partner $partnerId';
   }
 
-  void loadProducts() {
+  void loadInvoices() {
     isLoading.value = true;
-    // Dummy product data for testing
-    products.value = [
-      {
-        'id': 1,
-        'name': 'Product 1',
-        'initial_qty': 100,
-        'current_qty': 75,
-        'total_stock': 25,
-      },
-      {
-        'id': 2,
-        'name': 'Product 2',
-        'initial_qty': 50,
-        'current_qty': 30,
-        'total_stock': 20,
-      },
+    // Dummy invoice and product data for testing
+    invoices.value = [
+      Invoice(
+        date: DateTime.now(),
+        products: [
+          Product(
+            name: 'Product 1',
+            initialQuantity: 100,
+            newQuantity: 75,
+            totalStock: 25,
+          ),
+          Product(
+            name: 'Product 2',
+            initialQuantity: 50,
+            newQuantity: 30,
+            totalStock: 20,
+          ),
+        ],
+      ),
     ];
     isLoading.value = false;
   }
 
-  void selectMonth(String month) {
+  void filterByMonth(String month) {
     selectedMonth.value = month;
-    // TODO: Implement filtering by month
+    // TODO: Implement actual filtering logic if needed
   }
 
-  void printInvoice() {
+  void navigateToPrintInvoice() {
     Get.toNamed('/print-invoice', arguments: {
-      'partner': partner.value,
-      'products': products,
+      'partnerName': partnerName.value,
+      'invoices': invoices,
       'month': selectedMonth.value,
     });
   }
